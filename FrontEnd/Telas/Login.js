@@ -12,23 +12,61 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
+
+    if (isNotValidData(email, senha)){
+
+      return
+    }
+
     try {
+
       const response = await Axios.post('/user/login', {
         email: email,
         senha: senha
       });
+
       if (response.data.error) {
+
         alert(response.data.error);
+
       } else {
+
         const { user } = response.data;
         await AsyncStorage.setItem('user', JSON.stringify(user));
         alert("Login bem sucedido!")
         navigation.navigate('HomeCarona');
       }
+
     } catch (error) {
+
       console.error(error);
     }
   };  
+
+  const isNotValidData = (email, senha) => {
+
+    if (isEmailNotValid(email)){
+
+      alert("O Email informado não é válido!");
+      return true
+    }
+
+    if (isSenhaNotValid(senha)){
+
+      alert("Senha deve ser informada!");
+      return true
+    }
+
+    return false
+  }
+
+  const isSenhaNotValid = (senha) => typeof senha === "string" && senha.length === 0 || senha === null
+
+  const isEmailNotValid = (email) => {
+   
+    const emailPattern = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/
+    return !emailPattern.test(email)
+  };
   
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">

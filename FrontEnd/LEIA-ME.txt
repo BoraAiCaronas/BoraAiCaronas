@@ -1,6 +1,0 @@
-Para usar o footer nas suas telas vocês devem jogar a pasta "Comps" para o projeto de vocês (ou usar esse mesmo) e então só sera necessário 
-declarar o seguinte import no .JS que você estiver criando sua tela: import Footer from "./Comps/Footer" (pode ser que peça 2 pontos no começo)
-e então é só usar o componente na ultima linha antes de fechar a <VIEW> principal, dessa fomrma: <Footer />, como você pode ver o exemplo no APP.JS
-disponivel nesse projeto.
-
-Qualquer dúvida estou a disposição, att.

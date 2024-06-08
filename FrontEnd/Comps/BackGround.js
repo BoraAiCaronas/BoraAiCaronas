@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet } from 'react-native';
 
 const BackGround = ({ children }) => {
   return (
-    <ImageBackground source={require('../icons/BackgroundPassageiro.png')} style={styles.background}>
+    <ImageBackground source={require('../icons/BackgroundMotorista.png')} style={styles.background}>
       {children}
     </ImageBackground>
   );

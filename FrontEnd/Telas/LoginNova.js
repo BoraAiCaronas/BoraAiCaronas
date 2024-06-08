@@ -33,6 +33,10 @@ const LoginNova = () => {
         alert(response.data.error);
       } else {
         const { user } = response.data;
+        if (user.flagMotorista !== 'T') {
+          alert("Você não tem permissão para acessar.");
+          return; // Permanece na tela de login se não for motorista
+        }
         await AsyncStorage.setItem('user', JSON.stringify(user));
         alert("Login bem sucedido!")
         navigation.navigate('BuscarCaronasNovas');

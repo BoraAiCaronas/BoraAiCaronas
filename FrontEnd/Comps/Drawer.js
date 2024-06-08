@@ -1,10 +1,11 @@
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
-import BuscarCaronasNovas from "../Telas/BuscarCaronasNovas";
 import Historico from "../Telas/Historico";
 import AceitarCaronas from "../Telas/AceitarCaronas"
 import { View, StyleSheet, Alert, Image } from 'react-native';
 import CadastroScreen from "../Telas/Registrar";
 import { Logo } from '../Comps/Logo'; // Importando o componente LogoImage
+import DadosVeiculo from "../Telas/DadosVeiculo"
+import SolicitacoesCaronas from "../Telas/SolicitacoesCaronas"
 
 
 const AvatarIcon = require("../icons/IconAvatar.png");
@@ -55,16 +56,16 @@ export default function DrawerRoutes(){
         }}
       />
       <Drawer.Screen
+        name="Dados Veículo"
+        component={DadosVeiculo}
+      /> 
+      <Drawer.Screen
         name="Aceitar Caronas"
-        component={AceitarCaronas}
+        component={SolicitacoesCaronas}
       /> 
       <Drawer.Screen
         name="Histórico"
         component={Historico}
-      /> 
-      <Drawer.Screen
-        name="Buscar Carona"
-        component={BuscarCaronasNovas}
       /> 
       {/*  
       <Drawer.Screen

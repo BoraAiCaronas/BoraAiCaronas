@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 10,
-    tintColor: "#4B187D",
+    tintColor: "#E57A4B",
   },
 });
 

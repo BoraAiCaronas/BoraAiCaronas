@@ -10,6 +10,7 @@ const CustomTextInput = ({ placeholder,onChangeText, value ,textColor, fontSize,
         value={value}
         style={[styles.textinput, { color: textColor, fontSize: fontSize }]}
         secureTextEntry={secureTextEntry}
+        autoCapitalize='none'
       />
     </View>
   );

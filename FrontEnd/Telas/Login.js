@@ -12,6 +12,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
+
     try {
       const response = await Axios.post('/user/login', {
         email: email,
@@ -21,6 +22,10 @@ const LoginScreen = () => {
         alert(response.data.error);
       } else {
         const { user } = response.data;
+        if (user.flagMotorista !== 'F') {
+          alert("Você não tem permissão para acessar.");
+          return; // Permanece na tela de login se não for motorista
+        }
         await AsyncStorage.setItem('user', JSON.stringify(user));
         alert("Login bem sucedido!")
         navigation.navigate('HomeCarona');
@@ -28,8 +33,8 @@ const LoginScreen = () => {
     } catch (error) {
       console.error(error);
     }
-  };  
-  
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.logoContainer}>

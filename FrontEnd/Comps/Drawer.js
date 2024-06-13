@@ -1,11 +1,11 @@
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import React from 'react';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from "@react-navigation/drawer";
 import BuscarCaronasNovas from "../Telas/BuscarCaronasNovas";
 import Historico from "../Telas/Historico";
-import AceitarCaronas from "../Telas/AceitarCaronas"
+import AceitarCaronas from "../Telas/AceitarCaronas";
 import { View, StyleSheet, Alert, Image } from 'react-native';
 import CadastroScreen from "../Telas/Registrar";
-import { Logo } from '../Comps/Logo'; // Importando o componente LogoImage
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AvatarIcon = require("../icons/IconAvatar.png");
 const Drawer = createDrawerNavigator();
@@ -22,12 +22,35 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     marginBottom: 20,
   },
-})
+});
 
+function CustomDrawerContent(props) {
+  const navigation = props.navigation;
 
-export default function DrawerRoutes(){
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      navigation.replace('LoginNova'); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <Drawer.Navigator 
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Sair"
+        onPress={handleLogout}
+        labelStyle={{ color: '#FFFFFF', fontSize: 19 }}
+      />
+    </DrawerContentScrollView>
+  );
+}
+
+export default function DrawerRoutes() {
+  return (
+    <Drawer.Navigator
       screenOptions={{
         drawerStatusBarAnimation: 'slide',
         drawerStyle: {
@@ -36,19 +59,20 @@ export default function DrawerRoutes(){
         },
         drawerLabelStyle: {
           color: '#FFFF',
-          fontSize: 19
+          fontSize: 19,
         },
-        drawerActiveBackgroundColor: '#E57A4B', 
+        drawerActiveBackgroundColor: '#E57A4B',
         headerStyle: {
           backgroundColor: '#203864', // Cor de fundo do cabeçalho
         },
         headerTintColor: '#E57A4B',
       }}
+      drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
-          name="Usuário"
-          component={CadastroScreen}
-          options={{
+        name="Usuário"
+        component={CadastroScreen}
+        options={{
           drawerIcon: ({ color }) => (
             <Image source={AvatarIcon} style={[styles.avatar, { tintColor: color }]} />
           ),
@@ -57,27 +81,20 @@ export default function DrawerRoutes(){
       <Drawer.Screen
         name="Aceitar Caronas"
         component={AceitarCaronas}
-      /> 
+      />
       <Drawer.Screen
         name="Histórico"
         component={Historico}
-      /> 
+      />
       <Drawer.Screen
         name="Buscar Carona"
         component={BuscarCaronasNovas}
-      /> 
+      />
       {/*  
       <Drawer.Screen
         name="Dados do Veículo"
         component={BuscarCaronasNovas}
-      /> 
-    <Drawer.Screen
-        name="Sair"
-        component={Navegator}
-        options={{ headerShown: false }} 
-      />*/}   
-      </Drawer.Navigator>
-    
+      /> */}
+    </Drawer.Navigator>
   );
-  
 }

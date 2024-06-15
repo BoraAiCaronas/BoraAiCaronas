@@ -79,16 +79,12 @@ export default function DrawerRoutes() {
         }}
       />
       <Drawer.Screen
-        name="Aceitar Caronas"
-        component={AceitarCaronas}
+        name="Buscar Carona"
+        component={BuscarCaronasNovas}
       />
       <Drawer.Screen
         name="Histórico"
         component={Historico}
-      />
-      <Drawer.Screen
-        name="Buscar Carona"
-        component={BuscarCaronasNovas}
       />
       {/*  
       <Drawer.Screen

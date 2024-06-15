@@ -33,7 +33,9 @@ const BuscarCaronasNovas = () => {
           longitude: location.coords.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
-        });
+        })
+        console.log(location)
+        ;
 
         // Obtém os dados do usuário armazenados no AsyncStorage
         const userData = await AsyncStorage.getItem('user');
@@ -58,15 +60,15 @@ const BuscarCaronasNovas = () => {
   const confirmarDestino = async () => {
     if (origin && destination) {
       const corrida = {
-        "IdUserCorrida": userId, // Utiliza o ID do usuário aqui
+        "IdUserCorrida": userId,
         "latitudeUserOrigem": origin.latitude.toString(),
         "longitudeUserOrigem": origin.longitude.toString(),
         "latitudeUserDestino": destination.latitude.toString(),
         "longitudeUserDestino": destination.longitude.toString(),
+        "enderco": destination.endereco.toString(),
         "hr_saida": '00:00',
         "hr_chegada": '00:00',
       };
-      console.log(corrida)
 
       try {
         const response = await Axios.post("/corrida", corrida);
@@ -125,6 +127,7 @@ const BuscarCaronasNovas = () => {
               longitude: details.geometry.location.lng,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
+              endereco: details.formatted_address
             });
             confirmDestination();
           }}

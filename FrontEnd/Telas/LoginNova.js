@@ -13,6 +13,7 @@ const PasswordIcon = require("../icons/PasswordIcon.png");
 const AvatarIcon = require("../icons/IconAvatar.png");
 
 const LoginNova = () => {
+  AsyncStorage.clear();
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");

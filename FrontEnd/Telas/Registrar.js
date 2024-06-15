@@ -80,6 +80,7 @@ const CadastroScreen = () => {
         "email": email,
         "senha": senha,
         "confirmarSenha": confirmarSenha,
+        "flagMotorista" :'T'
       };
 
       const request = isLoggedIn ? Axios.put(`/user/${userId}`, usuario) : Axios.post("/user/cadastro", usuario);

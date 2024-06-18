@@ -1,38 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { BackGround } from '../Comps/BackGround';
-import { CustomButton } from '../Comps/CustomButton';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Axios from '../Comps/Axios'; // Importe Axios com suas configurações
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Historico = () => {
-  const [selectedOption, setSelectedOption] = useState('recebida'); // 'recebida' or 'ofertada'
   const [anoSelecionado, setAnoSelecionado] = useState(null);
   const [mesSelecionado, setMesSelecionado] = useState(null);
+  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
+  const [historico, setHistorico] = useState([]); // Estado para armazenar o histórico de corridas
 
-  // Mock ride history data
-  const historico = [
-    { id: 1, type: 'recebida', date: '2024-04-10', from: 'A', to: 'B' },
-    { id: 2, type: 'ofertada', date: '2024-03-15', from: 'B', to: 'C' },
-    // Add more ride history data as needed
-  ];
+  useEffect(() => {
+    fetchUserId(); // Ao montar o componente, busca o ID do usuário logado
+  }, []);
 
-  // Extract unique years and months from the ride history
-  const anos = Array.from(new Set(historico.map(ride => ride.date.split('-')[0])));
-  const meses = Array.from(new Set(historico.map(ride => ride.date.split('-')[1])));
-
-  // Filter ride history by selected Ano and Mes
-  const filtroHistorico = historico.filter(ride => {
-    if (anoSelecionado && mesSelecionado) {
-      const [Ano, Mes] = ride.date.split('-');
-      return Ano === anoSelecionado && Mes === mesSelecionado;
+  useEffect(() => {
+    if (userId) {
+      fetchHistorico(); // Quando o userId estiver disponível, busca o histórico de corridas do passageiro
     }
-    return true;
-  });
+  }, [userId]);
 
+  const fetchUserId = async () => {
+    try {
+      // Lógica para buscar o ID do usuário logado (substitua pela sua lógica específica)
+      const user = await AsyncStorage.getItem('user');
+      if (user) {
+        const userData = JSON.parse(user);
+        setUserId(userData.id);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar ID do usuário:', error);
+    }
+  };
+
+  const fetchHistorico = async () => {
+    try {
+      // Consulta ao endpoint para buscar histórico de corridas finalizadas pelo passageiro
+      const response = await Axios.get(`/corrida/finalizadas/passageiro/${userId}`);
+      setHistorico(response.data); // Atualiza o estado com o histórico obtido
+    } catch (error) {
+      console.error('Erro ao buscar histórico de corridas:', error);
+    }
+  };
+
+  // Função para agrupar histórico por data
   const groupByDay = (historico) => {
     const grouped = {};
     historico.forEach((item) => {
-      const date = item.date;
+      const date = item.hr_saida.substring(0, 10); // Obtém apenas a parte da data (yyyy-mm-dd)
       if (!grouped[date]) {
         grouped[date] = [];
       }
@@ -41,101 +57,78 @@ const Historico = () => {
     return grouped;
   };
 
+  // Extração de anos e meses do histórico, filtrado por ano e mês selecionados
+  const anos = Array.from(new Set(historico.map(ride => ride.hr_saida.substring(0, 4))));
+  const meses = Array.from(new Set(historico.map(ride => ride.hr_saida.substring(5, 7))));
+
+  // Filtrar histórico com base no ano e mês selecionados
+  const filtroHistorico = historico.filter(ride => {
+    if (anoSelecionado && mesSelecionado) {
+      const ano = ride.hr_saida.substring(0, 4);
+      const mes = ride.hr_saida.substring(5, 7);
+      return ano === anoSelecionado && mes === mesSelecionado;
+    }
+    return true;
+  });
+
+  // Histórico agrupado por dia
   const historicoAgrupado = groupByDay(filtroHistorico);
 
+  // Exibição do componente
   return (
     <BackGround>
-      <View style={{ 
-        flexDirection: 'row', 
-        justifyContent: 'space-around', 
-        marginBottom: 30, 
-        width:'100%'       
-        }}>
-        <View style={{ flex: 1 }}>
-          <CustomButton 
-            fontSize={20} 
-            title="RECEBIDAS" 
-            backgroundColor={selectedOption === 'recebida' ? "#E57A4B" : "#FFFFFF"} 
-            textColor={selectedOption === 'recebida' ? "#FFFFFF" : "#E57A4B"}   
-            onPress={() => setSelectedOption('recebida')}>
-            <Text style={selectedOption === 'recebida' ? styles.botaoSelecionado : styles.botaoNSelecionado}>Recebida</Text>
-          </CustomButton>
+      <View style={{ flex: 1, paddingTop: 20 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 15 }}>
+          <DropDownPicker
+            items={anos.map(ano => ({ label: ano, value: ano }))}
+            placeholder="ANO"
+            containerStyle={{ height: 40, width: '45%' }}
+            style={{ backgroundColor: '#E57A4B', borderColor: '#E57A4B' }}
+            itemStyle={{ justifyContent: 'flex-start' }}
+            dropDownStyle={{ backgroundColor: '#E57A4B' }}
+            onChangeItem={item => setAnoSelecionado(item.value)}
+            textStyle={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold' }}
+            zIndex={5000}
+          />
+          <DropDownPicker
+            items={meses.map(mes => ({ label: mes, value: mes }))}
+            placeholder="MÊS"
+            containerStyle={{ height: 40, width: '45%' }}
+            style={{ backgroundColor: '#E57A4B', borderColor: '#E57A4B' }}
+            itemStyle={{ justifyContent: 'flex-start' }}
+            dropDownStyle={{ backgroundColor: '#E57A4B' }}
+            onChangeItem={item => setMesSelecionado(item.value)}
+            textStyle={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold' }}
+            zIndex={4000}
+          />
         </View>
-        <View style={{ flex: 1 }}>
-          <CustomButton 
-            fontSize={20} 
-            title="OFERTADAS" 
-            backgroundColor={selectedOption === 'ofertada' ? "#E57A4B" : "#FFFFFF"} 
-            textColor={selectedOption === 'ofertada' ? "#FFFFFF" : "#E57A4B"}  
-            onPress={() => setSelectedOption('ofertada')}>
-            <Text style={selectedOption === 'ofertada' ? styles.botaoSelecionado : styles.botaoNSelecionado}>Ofertada</Text>
-          </CustomButton>
-        </View>
-      </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 30 }}>
-        {/* Ano filter */}
-        <DropDownPicker
-          items={anos.map(ano => ({ label: ano, value: ano }))}
-          placeholder="ANO"
-          containerStyle={{ height: 40, width: '45%' }}
-          style={{ backgroundColor: '#E57A4B', borderColor: '#E57A4B' }}
-          itemStyle={{ justifyContent: 'flex-start' }}
-          dropDownStyle={{ backgroundColor: '#E57A4B' }}
-          onChangeItem={item => setAnoSelecionado(item.value)}
-          textStyle={{ color: '#FFFFFF', fontSize:20, fontWeight:'bold' }}
-          zIndex={5000}
-        />
-        {/* Mes filter */}
-        <DropDownPicker
-          items={meses.map(mes => ({ label: mes, value: mes }))}
-          placeholder="MÊS"
-          containerStyle={{ height: 40, width: '45%' }}
-          style={{ backgroundColor: '#E57A4B', borderColor: '#E57A4B'}}
-          itemStyle={{ justifyContent: 'flex-start' }}
-          dropDownStyle={{ backgroundColor: '#E57A4B' }}
-          onChangeItem={item => setMesSelecionado(item.value)}
-          textStyle={{ color: '#FFFFFF', fontSize:20, fontWeight:'bold' }}
-          zIndex={4000}
-        />
-      </View>
-
-
-    <View style={{ height: 650, marginBottom:65}}>
-        <FlatList
-            style={{ backgroundColor: '#E57A4B' }}
+        <View style={{ flex: 1, marginBottom: 20 }}>
+          <FlatList
+            style={{ backgroundColor: '#E57A4B', marginBottom: 15 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
             data={filtroHistorico}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.IdCorrida.toString()} // Usando IdCorrida como chave única
             renderItem={({ item }) => (
-            <View style={{ margin: 30, marginVertical: 10 }}>
+              <View style={{ marginHorizontal: 15, marginVertical: 10 }}>
                 <Text style={[styles.textList]}>
-                {item.date} - {item.type === 'recebida' ? 'recebida' : 'ofertada'} - From: {item.from} - To: {item.to}
+                  Data: {item.hr_saida.substring(0, 10)} - Recebida - Origem: {item.latitudeUserOrigem}, {item.longitudeUserOrigem} - Destino: {item.endereco}
                 </Text>
-            </View>
+              </View>
             )}
-            ListEmptyComponent={<Text style={[styles.textList, { color: '#5A5151' }]}>No rides found.</Text>}
-        />
-</View>
-
+            ListEmptyComponent={<Text style={[styles.textList, { color: '#5A5151', alignSelf: 'center' }]}>Nenhuma corrida encontrada.</Text>}
+          />
+        </View>
+      </View>
     </BackGround>
   );
 };
 
 const styles = StyleSheet.create({
-  text: {
-    color: 'white',
-    fontSize: 30
-  },
-  botaoSelecionado: {
-    color: '#FFFFFF',
-    fontWeight: 'bold'
-  },
-  botaoNSelecionado: {
-    color: '#E57A4B'
-  },
-  textList:{
+  textList: {
     color: '#5A5151',
-    fontSize: 20
+    fontSize: 20,
+    textAlign: 'center'
   },
 });
 

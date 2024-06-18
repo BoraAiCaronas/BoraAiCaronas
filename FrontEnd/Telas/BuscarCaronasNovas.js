@@ -34,7 +34,6 @@ const BuscarCaronasNovas = () => {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         })
-        console.log(location)
         ;
 
         // Obtém os dados do usuário armazenados no AsyncStorage
@@ -42,7 +41,6 @@ const BuscarCaronasNovas = () => {
         if (userData) {
           const user = JSON.parse(userData);
           setUserId(user.id); // Assume que o objeto user possui uma propriedade id
-          console.log(user.id);
         }
       } catch (error) {
         console.error('Erro ao inicializar:', error);
@@ -65,14 +63,18 @@ const BuscarCaronasNovas = () => {
         "longitudeUserOrigem": origin.longitude.toString(),
         "latitudeUserDestino": destination.latitude.toString(),
         "longitudeUserDestino": destination.longitude.toString(),
-        "enderco": destination.endereco.toString(),
+        "enderco": destination.enderco.toString(),
         "hr_saida": '00:00',
         "hr_chegada": '00:00',
       };
+      console.log("Corrida:");
+      console.log(corrida);
 
       try {
         const response = await Axios.post("/corrida", corrida);
+
         Alert.alert("Sucesso", "Carona criada com sucesso!");
+        hideAlert()
       } catch (error) {
         if (error.response && error.response.data && error.response.data.message) {
           Alert.alert("Erro", error.response.data.message);
@@ -127,7 +129,7 @@ const BuscarCaronasNovas = () => {
               longitude: details.geometry.location.lng,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
-              endereco: details.formatted_address
+              enderco: details.formatted_address
             });
             confirmDestination();
           }}

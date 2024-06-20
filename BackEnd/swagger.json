@@ -1,0 +1,464 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "API"
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "operationId": "UserController_create",
+        "summary": "Criar um novo usuário",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          }
+        },
+        "tags": [
+          "Usuário"
+        ]
+      },
+      "get": {
+        "operationId": "UserController_findAll",
+        "summary": "Obter todos os usuários",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Usuários obtidos com sucesso"
+          }
+        },
+        "tags": [
+          "Usuário"
+        ]
+      }
+    },
+    "/user/{id}": {
+      "put": {
+        "operationId": "UserController_update",
+        "summary": "Atualizar um usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário atualizado com sucesso"
+          }
+        },
+        "tags": [
+          "Usuário"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_delete",
+        "summary": "Excluir um usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário excluído com sucesso"
+          }
+        },
+        "tags": [
+          "Usuário"
+        ]
+      }
+    },
+    "/Carona/{id}/pegar": {
+      "post": {
+        "operationId": "CaronaController_pegarCarona",
+        "summary": "Solicitar uma carona",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da carona",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Carona solicitada com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona": {
+      "post": {
+        "operationId": "CaronaController_create",
+        "summary": "Criar uma nova carona",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Carona criada com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      },
+      "get": {
+        "operationId": "CaronaController_findAll",
+        "summary": "Obter todas as caronas",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Caronas obtidas com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona/ativa": {
+      "get": {
+        "operationId": "CaronaController_findActiveCaronas",
+        "summary": "Obter caronas ativas",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Caronas ativas obtidas com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona/{id}": {
+      "put": {
+        "operationId": "CaronaController_update",
+        "summary": "Atualizar uma carona",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da carona",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Carona atualizada com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      },
+      "delete": {
+        "operationId": "CaronaController_delete",
+        "summary": "Excluir uma carona",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da carona",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Carona excluída com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona/pendentes/{userId}": {
+      "get": {
+        "operationId": "CaronaController_getCaronasPendentes",
+        "summary": "Obter caronas pendentes de um usuário",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Caronas pendentes obtidas com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona/{caronaId}/confirmar/{userId}": {
+      "post": {
+        "operationId": "CaronaController_confirmarCarona",
+        "summary": "Confirmar uma carona",
+        "parameters": [
+          {
+            "name": "caronaId",
+            "required": true,
+            "in": "path",
+            "description": "ID da carona",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "ID do solicitante da carona",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Carona confirmada com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/Carona/{caronaId}/cancelar": {
+      "post": {
+        "operationId": "CaronaController_cancelarCarona",
+        "summary": "Cancelar uma carona",
+        "parameters": [
+          {
+            "name": "caronaId",
+            "required": true,
+            "in": "path",
+            "description": "ID da carona",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Carona cancelada com sucesso"
+          }
+        },
+        "tags": [
+          "Carona"
+        ]
+      }
+    },
+    "/avaliacao": {
+      "post": {
+        "operationId": "AvaliacaoController_processarAvaliacao",
+        "summary": "Processar uma nova avaliação",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Avaliação processada com sucesso"
+          }
+        },
+        "tags": [
+          "Avaliação"
+        ]
+      }
+    },
+    "/avaliacao/media/{userId}": {
+      "get": {
+        "operationId": "AvaliacaoController_obterMediaAvaliacoes",
+        "summary": "Obter a média de avaliações de um usuário",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Média de avaliações obtida com sucesso"
+          }
+        },
+        "tags": [
+          "Avaliação"
+        ]
+      }
+    },
+    "/hist-caronas": {
+      "get": {
+        "operationId": "HistCaronasController_findAll",
+        "summary": "Obter todas as caronas no histórico",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Histórico de caronas obtido com sucesso"
+          }
+        },
+        "tags": [
+          "Histórico de Caronas"
+        ]
+      }
+    },
+    "/hist-caronas/user/{userId}": {
+      "get": {
+        "operationId": "HistCaronasController_findByUserId",
+        "summary": "Obter caronas no histórico por ID do usuário",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Histórico de caronas obtido com sucesso"
+          }
+        },
+        "tags": [
+          "Histórico de Caronas"
+        ]
+      }
+    },
+    "/veiculo": {
+      "post": {
+        "operationId": "VeiculoController_create",
+        "summary": "Criar um novo veículo",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Veículo criado com sucesso"
+          }
+        },
+        "tags": [
+          "Veículo"
+        ]
+      },
+      "get": {
+        "operationId": "VeiculoController_findAll",
+        "summary": "Obter todos os veículos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Veículos obtidos com sucesso"
+          }
+        },
+        "tags": [
+          "Veículo"
+        ]
+      }
+    },
+    "/veiculo/{userId}": {
+      "get": {
+        "operationId": "VeiculoController_findById",
+        "summary": "Obter veículos por ID do usuário",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Veículos obtidos com sucesso"
+          }
+        },
+        "tags": [
+          "Veículo"
+        ]
+      }
+    },
+    "/veiculo/{id}": {
+      "delete": {
+        "operationId": "VeiculoController_delete",
+        "summary": "Excluir um veículo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do veículo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Veículo excluído com sucesso"
+          }
+        },
+        "tags": [
+          "Veículo"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "BORAaí",
+    "description": "Backend BORAaí",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  nome           String
+  telefone       String    @unique
+  email          String    @unique
+  senha          String
+  confirmarSenha String
+  CPF            String    @unique
+  flagMotorista  String
+  historico      hist_caronas[]
+  veiculo        veiculo[]
+  verificacao_email verificacao_email[]
+  avaliacoesAutor avaliacao[]     @relation(name: "AutorUser")
+  corridasComoPassageiro corrida[] @relation("UserAsPassenger")
+  corridasComoMotorista  corrida[] @relation("UserAsDriver")
+
+  @@map("users")
+}
+
+model corrida {
+  IdCorrida              Int       @id @default(autoincrement())
+  IdUserCorrida          Int
+  user                   User      @relation("UserAsPassenger", fields: [IdUserCorrida], references: [id])
+  latitudeUserOrigem     String
+  longitudeUserOrigem    String
+  latitudeUserDestino    String
+  longitudeUserDestino   String
+  endereco               String
+  hr_saida               String
+  hr_chegada             String
+  ST_corrida              String
+  idUserMotorista        Int?
+  motorista              User?     @relation("UserAsDriver", fields: [idUserMotorista], references: [id])
+  avaliacao              avaliacao[]  @relation(name: "CorridaAvalicao")
+
+  @@map("corrida")
+}
+
+model avaliacao {
+  id            Int       @id @default(autoincrement())
+  autorUserId        Int
+  corridaId  Int       
+  ST_avaliacao  Float
+  comentario_avaliacao String 
+  status_avaliacao String
+  autorUser    User      @relation(name: "AutorUser", fields: [autorUserId], references: [id])
+  corrida    corrida      @relation(name: "CorridaAvalicao", fields: [corridaId], references: [IdCorrida])
+
+  @@map("avaliacao")
+}
+
+model hist_caronas {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id])
+  caronasPegas      Int
+  caronasFornecidas Int
+
+  @@map("hist_caronas")
+}
+
+model veiculo {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id])
+  nomeDoVeiculo     String
+  placa             String    @unique
+  DescVeiculo       String
+
+  @@map("veiculo")
+}
+
+model verificacao_email {
+  id                Int     @id @default(autoincrement())
+  userId            Int     
+  email_verificado  Boolean @default(false)
+  token_verificacao String
+  user              User    @relation(fields: [userId], references: [id])
+
+  @@map("vericacao")
+}
